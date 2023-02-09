@@ -1,8 +1,8 @@
 # Go REST API Boilerplate
 
-This boilerplate using uncle-bob clean architecture models and includes some basic package that will be used on any rest api, such as bcrypt and json web token.
+This boilerplate using uncle-bob clean architecture models and includes some basic third party package that will be used on any rest api.
 
-Stack used in this boilerplate :
+Package includes & used in this boilerplate :
 
 - `gin-gonic` as main library to handle any requests and serve the response.
 - `bcrypt` as password encryption to secure the password before store it in the database.
