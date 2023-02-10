@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"go-restapi-boilerplate/database"
+	"go-restapi-boilerplate/pkg/mysql"
+	"go-restapi-boilerplate/pkg/postgre"
 	"go-restapi-boilerplate/routes"
 	"net/http"
 	"os"
@@ -20,11 +23,13 @@ func main() {
 	}
 
 	// database initialization
-	// mysql.DatabaseInit()
+	mysql.DatabaseInit()
+	postgre.DatabaseInit()
 	// redis.RedisInit()
 
-	// database migration
-	// database.RunMigration()
+	// database migration & seeder
+	database.RunMigration()
+	database.RunSeeder()
 
 	// gin Mode
 	gin.SetMode(os.Getenv("GIN_MODE"))

@@ -1,0 +1,21 @@
+package database
+
+import (
+	"fmt"
+	"go-restapi-boilerplate/pkg/mysql"
+	"log"
+)
+
+func RunMigration() {
+	// run auto migration
+	err := mysql.DB.AutoMigrate(
+	// put all models struct here
+	// ex : &models.User{}
+	)
+	if err != nil {
+		fmt.Println(err.Error())
+		log.Fatal("Migration failed")
+	}
+
+	fmt.Println("Migration completed successfully")
+}
