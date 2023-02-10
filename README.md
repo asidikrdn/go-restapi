@@ -11,4 +11,15 @@ Package includes & used in this boilerplate :
 - `godotenv` as an .env file reader to read the environment variables form .env file.
 - `cors` as cors configuration.
 
+Environment Variables needed in this application :
+
+```s
+# database setup
+DB_HOST=<your_database_host>
+DB_PORT=<your_database_port>
+DB_USER=<your_database_user>
+DB_PASSWORD=<your_database_password>
+DB_NAME=<your_database_name>
+```
+
 If you want to use this boilerplate to develop your own project, don't forget to change the project name in `go.mod` file.
