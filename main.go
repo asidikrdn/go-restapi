@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"go-restapi-boilerplate/database"
-	"go-restapi-boilerplate/pkg/mysql"
 	"go-restapi-boilerplate/pkg/postgre"
 	"go-restapi-boilerplate/routes"
 	"net/http"
@@ -23,7 +22,6 @@ func main() {
 	}
 
 	// database initialization
-	mysql.DatabaseInit()
 	postgre.DatabaseInit()
 	// redis.RedisInit()
 

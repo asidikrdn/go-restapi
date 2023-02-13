@@ -11,9 +11,9 @@ func RunSeeder() {
 
 	/*
 		// cek is user table exist
-		if mysql.DB.Migrator().HasTable(&models.User{}) {
+		if postgre.DB.Migrator().HasTable(&models.User{}) {
 			// check is user table has minimum 1 user as admin
-			err := mysql.DB.First(&models.User{}, "role = ?", "superadmin").Error
+			err := postgre.DB.First(&models.User{}, "role = ?", "superadmin").Error
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// create 1 admin
 				newUser := models.User{
@@ -32,7 +32,7 @@ func RunSeeder() {
 				newUser.Password = hashPassword
 
 				// insert admin to database
-				errAddUser := mysql.DB.Select("UserID", "FullName", "Role", "Email", "IsEmailVerified", "Password").Create(&newUser).Error
+				errAddUser := postgre.DB.Select("UserID", "FullName", "Role", "Email", "IsEmailVerified", "Password").Create(&newUser).Error
 				if errAddUser != nil {
 					fmt.Println(errAddUser.Error())
 					log.Fatal("Seeding failed")
