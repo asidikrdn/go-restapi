@@ -12,16 +12,13 @@ func RunSeeder() {
 	/*
 		// cek is user table exist
 		if postgre.DB.Migrator().HasTable(&models.User{}) {
-			// check is user table has minimum 1 user as admin
-			err := postgre.DB.First(&models.User{}, "role = ?", "superadmin").Error
+			// check is user table has minimum 1 user
+			err := postgre.DB.First(&models.User{}).Error
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				// create 1 admin
+				// create 1 user
 				newUser := models.User{
-					UserID:          "000001",
-					FullName:        "Administrator",
-					Role:            "superadmin",
-					Email:           "admin@sigesit.com",
-					IsEmailVerified: false,
+					FullName:        "Sidik",
+					Email:           "sidik@mail.com",
 				}
 
 				hashPassword, err := bcrypt.HashingPassword("12345678")
@@ -31,8 +28,8 @@ func RunSeeder() {
 
 				newUser.Password = hashPassword
 
-				// insert admin to database
-				errAddUser := postgre.DB.Select("UserID", "FullName", "Role", "Email", "IsEmailVerified", "Password").Create(&newUser).Error
+				// insert user to database
+				errAddUser := postgre.DB.Create(&newUser).Error
 				if errAddUser != nil {
 					fmt.Println(errAddUser.Error())
 					log.Fatal("Seeding failed")
