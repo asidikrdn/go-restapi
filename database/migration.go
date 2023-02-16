@@ -2,13 +2,13 @@ package database
 
 import (
 	"fmt"
-	"go-restapi-boilerplate/pkg/postgre"
+	"go-restapi-boilerplate/pkg/mysql"
 	"log"
 )
 
 func RunMigration() {
 	// run auto migration
-	err := postgre.DB.AutoMigrate(
+	err := mysql.DB.AutoMigrate(
 	// put all models struct here
 	// ex : &models.User{}
 	)
