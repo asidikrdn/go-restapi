@@ -67,3 +67,13 @@ GIN_MODE=<release/debug>
 # port for running apps
 PORT=<your_port>
 ```
+
+## SetUp
+
+Before running this application, you must install and run the PostgreSQL database. After that, create a new database with name depend on your .env file.
+And this is step-by-step to run this application :
+
+- Run on terminal `git clone https://github.com/asidikrdn/go-restapi-boilerplate.git`
+- Run on terminal `go mod download`
+- Edit and customize this app depending on your needs
+- Run on terminal `go run main.go`
