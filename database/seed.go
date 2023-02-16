@@ -11,9 +11,9 @@ func RunSeeder() {
 
 	/*
 		// cek is user table exist
-		if postgre.DB.Migrator().HasTable(&models.User{}) {
+		if postgres.DB.Migrator().HasTable(&models.User{}) {
 			// check is user table has minimum 1 user
-			err := postgre.DB.First(&models.User{}).Error
+			err := postgres.DB.First(&models.User{}).Error
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// create 1 user
 				newUser := models.User{
@@ -29,7 +29,7 @@ func RunSeeder() {
 				newUser.Password = hashPassword
 
 				// insert user to database
-				errAddUser := postgre.DB.Create(&newUser).Error
+				errAddUser := postgres.DB.Create(&newUser).Error
 				if errAddUser != nil {
 					fmt.Println(errAddUser.Error())
 					log.Fatal("Seeding failed")

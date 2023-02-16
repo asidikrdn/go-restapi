@@ -1,4 +1,4 @@
-package postgre
+package postgres
 
 import (
 	"fmt"
@@ -31,5 +31,5 @@ func DatabaseInit() {
 	db, _ := DB.DB()
 	db.SetMaxOpenConns(100)
 
-	fmt.Println("Connected to Postgre Database")
+	fmt.Println("Connected to Postgres Database")
 }

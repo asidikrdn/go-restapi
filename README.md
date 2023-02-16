@@ -40,7 +40,7 @@ Stack in this boilerplate :
 - `gin-gonic` as main library to handle any routes.
 - `bcrypt` as password encryption to secure the password before store it in the database.
 - `jwt` as a token to authenticate communication from other service, such as client (front-end).
-- `gorm` as ORM library to handle communication between the apps and SQL databases. And postgree driver to connect to postgreSQL.
+- `gorm` as ORM library to handle communication between the apps and SQL databases. And postgres driver to connect to postgreSQL.
 - `godotenv` as an .env file reader to read the environment variables form .env file.
 - `cors` as cors configuration.
 
