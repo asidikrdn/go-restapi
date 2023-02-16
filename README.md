@@ -70,7 +70,7 @@ PORT=<your_port>
 
 ## SetUp
 
-Before running this application, you must install and run the PostgreSQL database. After that, create a new database with name depend on your .env file.
+Before run this apps, you must install and run the PostgreSQL database. After that, create a new database with name depend on your .env file.
 And this is step-by-step to run this application :
 
 - Run on terminal `git clone https://github.com/asidikrdn/go-restapi-boilerplate.git`
