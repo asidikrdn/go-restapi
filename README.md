@@ -5,11 +5,11 @@ If you want to use this boilerplate to develop your own project, don't forget to
 
 ## Clean Architecture
 
-The application follows the Uncle Bob "[Clean Architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)" principles and project structure :
+The application follows the Uncle Bob "[Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)" principles and project structure :
 
 ### Clean Architecture layers
 
-![Schema of flow of Clean Architecture](/doc/Uncle_Bob_Clean_Architecture.jpg)
+![Schema of flow of Clean Architecture](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
 
 ### Project anatomy
 
