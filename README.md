@@ -31,6 +31,8 @@ app
   └ main.go                         → Main application entry point
 ```
 
+routers → handlers → repository → database
+
 ## Tech Stack
 
 Stack in this boilerplate :
