@@ -37,12 +37,13 @@ routers → handlers → repository → database
 
 Stack in this boilerplate :
 
-- `gin-gonic` as main library to handle any routes.
+- `gorilla/mux` as main library to handle any routes.
 - `bcrypt` as password encryption to secure the password before store it in the database.
 - `jwt` as a token to authenticate communication from other service, such as client (front-end).
 - `gorm` as ORM library to handle communication between the apps and SQL databases. And MySQL driver to connect to MySQL.
 - `godotenv` as an .env file reader to read the environment variables form .env file.
 - `cors` as cors configuration.
+- `validator` as a request validator.
 
 ## Environtment Variables
 
@@ -60,9 +61,6 @@ DB_NAME=<your_database_name>
 REDIS_HOST=<your_database_host>
 REDIS_PORT=<your_database_port>
 REDIS_PASSWORD=<your_database_password>
-
-# gin mode
-GIN_MODE=<release/debug>
 
 # port for running apps
 PORT=<your_port>

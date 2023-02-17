@@ -14,16 +14,16 @@ import (
  "go-restapi-boilerplate/pkg/mysql"
  "go-restapi-boilerplate/repositories"
 
- "github.com/gin-gonic/gin"
+ "github.com/gorilla/mux"
 )
 
-func User(r *gin.RouterGroup) {
+func User(r *mux.Router) {
  userRepository := repositories.MakeRepository(mysql.DB)
  h := handlers.HandlerUser(userRepository)
 
  //  without middleware
- r.GET("/users", h.FindAllCustomer)
+ r.HandleFunc("/users", h.FindAllCustomer).Methods("GET")
  //  with middleware
- r.GET("/users", middleware.AdminAuth(), h.FindAllCustomer)
+ r.HandleFunc("/users", middleware.AdminAuth(h.FindAllCustomer)).Methods("GET")
  }
 ```

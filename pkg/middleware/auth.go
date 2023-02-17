@@ -1,24 +1,26 @@
 package middleware
 
 import (
+	"context"
+	"encoding/json"
 	"go-restapi-boilerplate/dto"
 	jwtToken "go-restapi-boilerplate/pkg/jwt"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
-func UserAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func UserAuth(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
 		// mengambil token
-		token := c.Request.Header.Get("Authorization")
+		token := r.Header.Get("Authorization")
 		if token == "" {
 			response := dto.ErrorResult{
 				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized",
 			}
-			c.JSON(http.StatusUnauthorized, response)
-			c.Abort() // prevent doing next handler
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
@@ -29,41 +31,42 @@ func UserAuth() gin.HandlerFunc {
 				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized",
 			}
-			c.JSON(http.StatusUnauthorized, response)
-			c.Abort() // prevent doing next handler
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
 		// set up context value and send it to next handler
-		c.Set("userData", claims)
-		c.Next()
-	}
+		ctx := context.WithValue(r.Context(), "userData", claims)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
-func AdminAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func AdminAuth(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 
-		// get token
-		token := c.Request.Header.Get("Authorization")
+		// mengambil token
+		token := r.Header.Get("Authorization")
 		if token == "" {
 			response := dto.ErrorResult{
 				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized",
 			}
-			c.JSON(http.StatusUnauthorized, response)
-			c.Abort() // prevent doing next handler
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
-		// validate token and get claims
+		// validasi token dan mengambil claims
 		claims, err := jwtToken.DecodeToken(token)
 		if err != nil {
 			response := dto.ErrorResult{
 				Status:  http.StatusUnauthorized,
-				Message: err.Error(),
+				Message: "Unauthorized",
 			}
-			c.JSON(http.StatusUnauthorized, response)
-			c.Abort() // prevent doing next handler
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
@@ -73,41 +76,42 @@ func AdminAuth() gin.HandlerFunc {
 				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized, you're not administrator",
 			}
-			c.JSON(http.StatusUnauthorized, response)
-			c.Abort() // prevent doing next handler
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
 		// set up context value and send it to next handler
-		c.Set("userData", claims)
-		c.Next()
-	}
+		ctx := context.WithValue(r.Context(), "userData", claims)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
-func SuperAdminAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func SuerAdminAuth(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 
-		// get token
-		token := c.Request.Header.Get("Authorization")
+		// mengambil token
+		token := r.Header.Get("Authorization")
 		if token == "" {
 			response := dto.ErrorResult{
 				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized",
 			}
-			c.JSON(http.StatusUnauthorized, response)
-			c.Abort() // prevent doing next handler
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
-		// validate token and get claims
+		// validasi token dan mengambil claims
 		claims, err := jwtToken.DecodeToken(token)
 		if err != nil {
 			response := dto.ErrorResult{
 				Status:  http.StatusUnauthorized,
-				Message: err.Error(),
+				Message: "Unauthorized",
 			}
-			c.JSON(http.StatusUnauthorized, response)
-			c.Abort() // prevent doing next handler
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
@@ -117,13 +121,13 @@ func SuperAdminAuth() gin.HandlerFunc {
 				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized, you're not Super Administrator",
 			}
-			c.JSON(http.StatusUnauthorized, response)
-			c.Abort() // prevent doing next handler
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
 		// set up context value and send it to next handler
-		c.Set("userData", claims)
-		c.Next()
-	}
+		ctx := context.WithValue(r.Context(), "userData", claims)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }

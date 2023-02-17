@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/rs/cors"
 )
 
 func main() {
@@ -29,30 +29,21 @@ func main() {
 	database.RunMigration()
 	database.RunSeeder()
 
-	// gin Mode
-	gin.SetMode(os.Getenv("GIN_MODE"))
-
 	// create new router
-	router := gin.Default()
+	router := mux.NewRouter()
 
 	// call routerinit with pathprefix
-	routes.RouterInit(router.Group("/api/v1"))
+	routes.RouterInit(router.PathPrefix("/api/v1").Subrouter())
 
 	// file server endpoint
-	router.Static("/static", "./uploads")
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./uploads"))))
 
-	//	set up CORS middleware
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedHeaders:   []string{"X-Requested-With", "Content-Type", "Authorization"},
-		AllowedMethods:   []string{"HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"},
-		AllowCredentials: true,
-	})
-
-	// Add cors middleware on all route
-	handler := c.Handler(router)
+	//	set up and add cors middleware on all route
+	AllowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	AllowedOrigins := handlers.AllowedOrigins([]string{"*"})
+	AllowedMethods := handlers.AllowedMethods([]string{"HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"})
 
 	// Running services
 	fmt.Println("server running on localhost:" + os.Getenv("PORT"))
-	http.ListenAndServe(":"+os.Getenv("PORT"), handler)
+	http.ListenAndServe(":"+os.Getenv("PORT"), handlers.CORS(AllowedHeaders, AllowedOrigins, AllowedMethods)(router))
 }

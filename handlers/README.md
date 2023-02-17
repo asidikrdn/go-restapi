@@ -9,6 +9,7 @@ example :
 package handlers
 
 import (
+ "net/http"
  "go-restapi-boilerplate/dto"
  "go-restapi-boilerplate/models"
  "go-restapi-boilerplate/repositories"
@@ -22,7 +23,9 @@ func HandlerUser(userRepository repositories.UserRepository) *handlerUser {
  return &handlerUser{userRepository}
 }
 
-func (h *handlerUser) FindAllUsers(c *gin.Context) {
+func (h *handlerUser) FindAllUsers(w http.ResponseWriter, r *http.Request) {
+ w.Header().Set("Content-Type", "application/json")
+
  users, err := h.UserRepository.FindAllUsers()
  if err != nil {
   response := dto.Result{
@@ -30,7 +33,8 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
    Message: err.Error(),
    Data:    nil,
   }
-  c.JSON(http.StatusInternalServerError, response)
+  w.WriteHeader(http.StatusNotFound)
+  json.NewEncoder(w).Encode(response)
   return
  }
 
@@ -39,7 +43,8 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
   Message: "Success",
   Data:    convertMultipleUserResponse(users),
  }
- c.JSON(http.StatusOK, response)
+ w.WriteHeader(http.StatusNotFound)
+ json.NewEncoder(w).Encode(response)
 }
 
 // convert response

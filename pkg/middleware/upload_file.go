@@ -1,59 +1,58 @@
 package middleware
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"go-restapi-boilerplate/dto"
-	"log"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 // single file upload middleware with id as parameter and used for generating filename
-func UploadSingleFile() gin.HandlerFunc {
-	return func(c *gin.Context) {
-
+func UploadSingleFile(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		//  parsing form with max memory size 8 Mb
-		errParsing := c.Request.ParseMultipartForm(8192)
+		errParsing := r.ParseMultipartForm(8192)
 		if errParsing != nil {
 			response := dto.ErrorResult{
 				Status:  http.StatusBadRequest,
 				Message: errParsing.Error(),
 			}
-			c.JSON(http.StatusBadRequest, response)
-			c.Abort()
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
 		// single file
-		file, err := c.FormFile("image")
+		uploadedFile, handler, err := r.FormFile("image")
 
 		// if file doesn't exist
 		if err != nil {
 			// set up context value and send it to next handler
-			c.Set("image", "")
-			c.Next()
+			imageCtx := context.WithValue(r.Context(), "image", "")
+			next.ServeHTTP(w, r.WithContext(imageCtx))
 			return
 		}
-
-		log.Println(file.Filename)
+		defer uploadedFile.Close()
 
 		// validation format file
-		if filepath.Ext(file.Filename) != ".jpg" && filepath.Ext(file.Filename) != ".jpeg" && filepath.Ext(file.Filename) != ".png" {
+		if filepath.Ext(handler.Filename) != ".jpg" && filepath.Ext(handler.Filename) != ".jpeg" && filepath.Ext(handler.Filename) != ".png" {
+			w.WriteHeader(http.StatusBadRequest)
 			response := dto.ErrorResult{
 				Status:  http.StatusBadRequest,
 				Message: "Invalid file type",
 			}
-			c.JSON(http.StatusBadRequest, response)
-			c.Abort()
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
 		// generate randomized filename using timestamps that convert to miliseconds
-		newFileName := fmt.Sprintf("%d%s", time.Now().UnixNano(), filepath.Ext(file.Filename))
+		newFileName := fmt.Sprintf("%d%s", time.Now().UnixNano(), filepath.Ext(handler.Filename))
 
 		// get active directory
 		dir, err := os.Getwd()
@@ -64,56 +63,84 @@ func UploadSingleFile() gin.HandlerFunc {
 		// set file location
 		fileLocation := filepath.Join(dir, "uploads/img", newFileName)
 
-		// Upload the file to specific dst.
-		err = c.SaveUploadedFile(file, fileLocation)
+		// Create new file and open it
+		targetFile, err := os.OpenFile(fileLocation, os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
 			response := dto.ErrorResult{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			}
-			c.JSON(http.StatusBadRequest, response)
-			c.Abort()
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(response)
+			return
+		}
+		defer targetFile.Close()
+		// Copy uploded image to created file
+		if _, err := io.Copy(targetFile, uploadedFile); err != nil {
+			response := dto.ErrorResult{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
+		var imgUrl string
+		if strings.Contains(r.Host, "localhost") || strings.Contains(r.Host, "127.0.0.1") {
+			imgUrl = fmt.Sprintf("http://%s/static/img/%s", r.Host, newFileName)
+		} else {
+			imgUrl = fmt.Sprintf("https://%s/static/img/%s", r.Host, newFileName)
+		}
+
 		// set up context value and send it to next handler
-		c.Set("image", fmt.Sprintf("%s/static/img/%s", os.Getenv("BASE_URL"), newFileName))
-		c.Next()
-	}
+		imageCtx := context.WithValue(r.Context(), "image", imgUrl)
+		next.ServeHTTP(w, r.WithContext(imageCtx))
+	})
 }
 
 // multiple file upload middleware with id as parameter and used for generating filename
-func UploadMultipleFiles() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func UploadMultipleFiles(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		var arrImages []string
 
 		//  parsing form with max memory size 8 Mb
-		errParsing := c.Request.ParseMultipartForm(8192)
+		errParsing := r.ParseMultipartForm(8192)
 		if errParsing != nil {
 			response := dto.ErrorResult{
 				Status:  http.StatusBadRequest,
 				Message: errParsing.Error(),
 			}
-			c.JSON(http.StatusBadRequest, response)
-			c.Abort()
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
 		// parsing multipart form data
-		form, _ := c.MultipartForm()
-		files := form.File["images"]
+		files := r.MultipartForm.File["images"]
 
 		// if file doesn't exist
-		if len(form.File) <= 0 {
+		if len(files) <= 0 {
 			// set up context value and send it to next handler
-			c.Set("images", []string{})
-			c.Next()
+			imageCtx := context.WithValue(r.Context(), "image", []string{})
+			next.ServeHTTP(w, r.WithContext(imageCtx))
 			return
 		}
 
 		for _, file := range files {
-			log.Println(file.Filename)
+			// open the file
+			openedFile, err := file.Open()
+			if err != nil {
+				response := dto.ErrorResult{
+					Status:  http.StatusBadRequest,
+					Message: err.Error(),
+				}
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(response)
+				return
+			}
+			defer openedFile.Close()
 
 			// validation format file
 			if filepath.Ext(file.Filename) != ".jpg" && filepath.Ext(file.Filename) != ".jpeg" && filepath.Ext(file.Filename) != ".png" {
@@ -121,8 +148,8 @@ func UploadMultipleFiles() gin.HandlerFunc {
 					Status:  http.StatusBadRequest,
 					Message: "Invalid file type",
 				}
-				c.JSON(http.StatusBadRequest, response)
-				c.Abort()
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(response)
 				return
 			}
 
@@ -138,23 +165,41 @@ func UploadMultipleFiles() gin.HandlerFunc {
 			// set file location
 			fileLocation := filepath.Join(dir, "uploads/img", newFileName)
 
-			// Upload the file to specific dst.
-			err = c.SaveUploadedFile(file, fileLocation)
+			// Create new file and open it
+			targetFile, err := os.OpenFile(fileLocation, os.O_WRONLY|os.O_CREATE, 0666)
 			if err != nil {
 				response := dto.ErrorResult{
 					Status:  http.StatusBadRequest,
 					Message: err.Error(),
 				}
-				c.JSON(http.StatusBadRequest, response)
-				c.Abort()
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(response)
+				return
+			}
+			defer targetFile.Close()
+			// Copy uploded image to created file
+			if _, err := io.Copy(targetFile, openedFile); err != nil {
+				response := dto.ErrorResult{
+					Status:  http.StatusBadRequest,
+					Message: err.Error(),
+				}
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(response)
 				return
 			}
 
-			arrImages = append(arrImages, fmt.Sprintf("%s/static/img/%s", os.Getenv("BASE_URL"), newFileName))
+			var imgUrl string
+			if strings.Contains(r.Host, "localhost") || strings.Contains(r.Host, "127.0.0.1") {
+				imgUrl = fmt.Sprintf("http://%s/static/img/%s", r.Host, newFileName)
+			} else {
+				imgUrl = fmt.Sprintf("https://%s/static/img/%s", r.Host, newFileName)
+			}
+
+			arrImages = append(arrImages, imgUrl)
 		}
 
 		// set up context value and send it to next handler
-		c.Set("images", arrImages)
-		c.Next()
-	}
+		imageCtx := context.WithValue(r.Context(), "image", arrImages)
+		next.ServeHTTP(w, r.WithContext(imageCtx))
+	})
 }
