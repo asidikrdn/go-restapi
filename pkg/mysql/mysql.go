@@ -30,10 +30,10 @@ func DatabaseInit() {
 		panic(err.Error())
 	}
 
-	// set max concurrent connections to 100, if this app have more than 100 concurrent connections, several connections must wait till one of 100 concurrent connection finished its process.
-	// If not set then this app have more than 100 concurrent connections, several connections may be error
+	// set max concurrent connections to 5, if this app have more than 5 concurrent connections, several connections must wait till one of 5 concurrent connection finished its process.
+	// If not set then this app have more than 5 concurrent connections, several connections may be error
 	db, _ := DB.DB()
-	db.SetMaxOpenConns(100)
+	db.SetMaxOpenConns(5)
 
 	fmt.Println("Connected to MySQL database")
 }
