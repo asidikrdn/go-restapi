@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -76,8 +77,15 @@ func UploadSingleFile() gin.HandlerFunc {
 			return
 		}
 
+		var imgUrl string
+		if strings.Contains(c.Request.Host, "localhost") || strings.Contains(c.Request.Host, "127.0.0.1") {
+			imgUrl = fmt.Sprintf("http://%s/static/img/%s", c.Request.Host, newFileName)
+		} else {
+			imgUrl = fmt.Sprintf("https://%s/static/img/%s", c.Request.Host, newFileName)
+		}
+
 		// set up context value and send it to next handler
-		c.Set("image", fmt.Sprintf("%s/static/img/%s", os.Getenv("BASE_URL"), newFileName))
+		c.Set("image", imgUrl)
 		c.Next()
 	}
 }
@@ -150,7 +158,14 @@ func UploadMultipleFiles() gin.HandlerFunc {
 				return
 			}
 
-			arrImages = append(arrImages, fmt.Sprintf("%s/static/img/%s", os.Getenv("BASE_URL"), newFileName))
+			var imgUrl string
+			if strings.Contains(c.Request.Host, "localhost") || strings.Contains(c.Request.Host, "127.0.0.1") {
+				imgUrl = fmt.Sprintf("http://%s/static/img/%s", c.Request.Host, newFileName)
+			} else {
+				imgUrl = fmt.Sprintf("https://%s/static/img/%s", c.Request.Host, newFileName)
+			}
+
+			arrImages = append(arrImages, imgUrl)
 		}
 
 		// set up context value and send it to next handler
