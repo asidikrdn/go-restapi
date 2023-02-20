@@ -29,7 +29,7 @@ func DatabaseInit() {
 
 	// set max connections, cause gorm not hava default max connections value
 	db, _ := DB.DB()
-	db.SetMaxOpenConns(100)
+	db.SetMaxOpenConns(5)
 
 	fmt.Println("Connected to Postgres Database")
 }
