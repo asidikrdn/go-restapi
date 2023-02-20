@@ -40,7 +40,7 @@ Stack in this boilerplate :
 - `gorilla/mux` as main library to handle any routes.
 - `bcrypt` as password encryption to secure the password before store it in the database.
 - `jwt` as a token to authenticate communication from other service, such as client (front-end).
-- `gorm` as ORM library to handle communication between the apps and SQL databases. And MySQL driver to connect to MySQL.
+- `gorm` as ORM library to handle communication between the apps and SQL databases. And PostgreSQL driver to connect to PostgreSQL.
 - `godotenv` as an .env file reader to read the environment variables form .env file.
 - `cors` as cors configuration.
 - `validator` as a request validator.
@@ -68,7 +68,7 @@ PORT=<your_port>
 
 ## SetUp
 
-Before run this apps, you must install and run the MySQL database. After that, create a new database with name depend on your .env file.
+Before run this apps, you must install and run the PostgreSQL database. After that, create a new database with name depend on your .env file.
 And this is step-by-step to run this application :
 
 - Run on terminal `git clone https://github.com/asidikrdn/go-restapi-boilerplate.git`

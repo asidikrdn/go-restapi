@@ -11,14 +11,14 @@ package routes
 import (
  "go-restapi-boilerplate/handlers"
  "go-restapi-boilerplate/pkg/middleware"
- "go-restapi-boilerplate/pkg/mysql"
+ "go-restapi-boilerplate/pkg/postgres"
  "go-restapi-boilerplate/repositories"
 
  "github.com/gorilla/mux"
 )
 
 func User(r *mux.Router) {
- userRepository := repositories.MakeRepository(mysql.DB)
+ userRepository := repositories.MakeRepository(postgres.DB)
  h := handlers.HandlerUser(userRepository)
 
  //  without middleware
