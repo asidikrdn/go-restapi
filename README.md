@@ -16,7 +16,7 @@ The application follows the Uncle Bob "[Clean Architecture](https://blog.cleanco
 ```text
 app
   └ database                        → Migration & Seeder functions from models to database
-  └ dto                             → Converter objects that transform outside objects (ex: HTTP request payload) to inside objects (ex: database models), or vice versa 
+  └ dto                             → Converter objects that transform outside objects (ex: HTTP request payload) to inside objects (ex: database models), or vice versa
   └ handlers                        → Contains any function to handle the request and serve the response
   └ models                          → Initalize models that want to be migrated to database
   └ pkg                             → Frameworks, drivers and tools such as Database, custom middleware, mailing/logging/glue code etc
@@ -41,8 +41,8 @@ Stack in this boilerplate :
 - `bcrypt` as password encryption to secure the password before store it in the database.
 - `jwt` as a token to authenticate communication from other service, such as client (front-end).
 - `gorm` as ORM library to handle communication between the apps and SQL databases. And MySQL driver to connect to MySQL.
-- `godotenv` as an .env file reader to read the environment variables form .env file.
-- `cors` as cors configuration.
+- `joho/godotenv` as an .env file reader to read the environment variables form .env file.
+- `gin-contrib/cors` as cors configuration.
 
 ## Environtment Variables
 
