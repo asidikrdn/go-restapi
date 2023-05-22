@@ -5,12 +5,11 @@ import (
 	"go-restapi-boilerplate/database"
 	"go-restapi-boilerplate/pkg/postgres"
 	"go-restapi-boilerplate/routes"
-	"net/http"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/rs/cors"
 )
 
 func main() {
@@ -42,17 +41,15 @@ func main() {
 	router.Static("/static", "./uploads")
 
 	//	set up CORS middleware
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedHeaders:   []string{"X-Requested-With", "Content-Type", "Authorization"},
-		AllowedMethods:   []string{"HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"},
-		AllowCredentials: true,
-	})
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://example.com"} // Replace with your allowed origins
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	config.AllowHeaders = []string{"Origin", "Content-Type"}
 
 	// Add cors middleware on all route
-	handler := c.Handler(router)
+	router.Use(cors.New(config))
 
 	// Running services
 	fmt.Println("server running on localhost:" + os.Getenv("PORT"))
-	http.ListenAndServe(":"+os.Getenv("PORT"), handler)
+	router.Run(":" + os.Getenv("PORT"))
 }
