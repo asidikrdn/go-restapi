@@ -46,27 +46,7 @@ Stack in this boilerplate :
 
 ## Environtment Variables
 
-Environment Variables needed in this application :
-
-```env
-# database setup
-DB_HOST=<your_database_host>
-DB_PORT=<your_database_port>
-DB_USER=<your_database_user>
-DB_PASSWORD=<your_database_password>
-DB_NAME=<your_database_name>
-
-# redis setup
-REDIS_HOST=<your_database_host>
-REDIS_PORT=<your_database_port>
-REDIS_PASSWORD=<your_database_password>
-
-# gin mode
-GIN_MODE=<release/debug>
-
-# port for running apps
-PORT=<your_port>
-```
+The required environment variables to run this application are available in the .env.example file. Please copy that file to a new .env file and adjust its contents according to your needs
 
 ## SetUp
 
