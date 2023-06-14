@@ -6,8 +6,8 @@ import (
 	"log"
 )
 
+// migration up
 func RunMigration() {
-	// run auto migration
 	err := postgres.DB.AutoMigrate(
 	// put all models struct here
 	// ex : &models.User{}
@@ -17,5 +17,20 @@ func RunMigration() {
 		log.Fatal("Migration failed")
 	}
 
-	fmt.Println("Migration completed successfully")
+	fmt.Println("Migration up completed successfully")
+}
+
+// migration down
+func DropMigration() {
+	err := postgres.DB.Migrator().DropTable(
+	// put all models struct here
+	// ex : &models.User{}
+	)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		log.Fatal("Migration failed")
+	}
+
+	fmt.Println("Migration down completed successfully")
 }
