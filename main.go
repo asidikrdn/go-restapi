@@ -25,6 +25,7 @@ func main() {
 	// redis.RedisInit()
 
 	// database migration & seeder
+	database.DropMigration()
 	database.RunMigration()
 	database.RunSeeder()
 
