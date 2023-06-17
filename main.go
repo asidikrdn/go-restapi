@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go-restapi-boilerplate/database"
+	"go-restapi-boilerplate/pkg/middleware"
 	"go-restapi-boilerplate/pkg/postgres"
 	"go-restapi-boilerplate/routes"
 	"os"
@@ -34,6 +35,9 @@ func main() {
 
 	// create new router
 	router := gin.Default()
+
+	// call logger middleware before route to any routes
+	router.Use(middleware.Logger())
 
 	// call routerinit with pathprefix
 	routes.RouterInit(router.Group("/api/v1"))
