@@ -20,12 +20,8 @@ func UploadSingleFile() gin.HandlerFunc {
 		//  parsing form with max memory size 8 Mb
 		errParsing := c.Request.ParseMultipartForm(8192)
 		if errParsing != nil {
-			response := dto.ErrorResult{
-				Status:  http.StatusBadRequest,
-				Message: errParsing.Error(),
-			}
-			c.JSON(http.StatusBadRequest, response)
-			c.Abort()
+			fmt.Println("Request parse error: ", errParsing)
+			c.Next()
 			return
 		}
 
@@ -99,12 +95,8 @@ func UploadMultipleFiles() gin.HandlerFunc {
 		//  parsing form with max memory size 8 Mb
 		errParsing := c.Request.ParseMultipartForm(8192)
 		if errParsing != nil {
-			response := dto.ErrorResult{
-				Status:  http.StatusBadRequest,
-				Message: errParsing.Error(),
-			}
-			c.JSON(http.StatusBadRequest, response)
-			c.Abort()
+			fmt.Println("Request parse error: ", errParsing)
+			c.Next()
 			return
 		}
 
