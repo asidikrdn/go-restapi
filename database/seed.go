@@ -2,41 +2,36 @@ package database
 
 import (
 	"fmt"
+	"go-restapi-boilerplate/models"
+	"go-restapi-boilerplate/pkg/postgres"
+	"log"
 )
 
 func RunSeeder() {
-	// ==================================
-	// EXAMPLE
-	// ==================================
+	// Role
+	if postgres.DB.Migrator().HasTable(&models.MstRole{}) {
+		newRole := []models.MstRole{}
 
-	/*
-		// cek is user table exist
-		if postgres.DB.Migrator().HasTable(&models.User{}) {
-			// check is user table has minimum 1 user
-			err := postgres.DB.First(&models.User{}).Error
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				// create 1 user
-				newUser := models.User{
-					FullName:        "Sidik",
-					Email:           "sidik@mail.com",
-				}
+		newRole = append(newRole, models.MstRole{
+			Role: "Superadmin",
+		})
+		newRole = append(newRole, models.MstRole{
+			Role: "Admin",
+		})
+		newRole = append(newRole, models.MstRole{
+			Role: "User",
+		})
 
-				hashPassword, err := bcrypt.HashingPassword("12345678")
-				if err != nil {
-					log.Fatal("Hash password failed")
-				}
-
-				newUser.Password = hashPassword
-
-				// insert user to database
-				errAddUser := postgres.DB.Create(&newUser).Error
-				if errAddUser != nil {
-					fmt.Println(errAddUser.Error())
-					log.Fatal("Seeding failed")
-				}
+		for _, role := range newRole {
+			errAddRole := postgres.DB.Create(&role).Error
+			if errAddRole != nil {
+				fmt.Println(errAddRole.Error())
+				log.Fatal("Seeding failed")
 			}
 		}
-	*/
+
+		fmt.Println("Success seeding master role...")
+	}
 
 	fmt.Println("Seeding completed successfully")
 }

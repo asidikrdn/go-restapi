@@ -68,7 +68,7 @@ func AdminAuth() gin.HandlerFunc {
 		}
 
 		// validate is it admin
-		if claims["role"].(string) != "superadmin" && claims["role"].(string) != "admin" {
+		if claims["roleId"].(float64) != 1 && claims["roleId"].(float64) != 2 {
 			response := dto.ErrorResult{
 				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized, you're not administrator",
@@ -112,7 +112,7 @@ func SuperAdminAuth() gin.HandlerFunc {
 		}
 
 		// validate is it superadmin
-		if claims["role"].(string) != "superadmin" {
+		if claims["roleId"].(float64) != 1 {
 			response := dto.ErrorResult{
 				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized, you're not Super Administrator",
