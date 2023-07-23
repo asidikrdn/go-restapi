@@ -29,9 +29,10 @@ func Logger() gin.HandlerFunc {
 			Method:    c.Request.Method,
 		}
 
-		if strings.Contains(reqBody.String(), "password") {
+		if strings.Contains(reqBody.String(), "password") { // jika dalam req body terdapat key password
 			logData.Body = "this data is encrypted, because contains credentials"
 		} else if reqBody.String() != "" {
+			// split req body, jika json maka tidak akan tersplit, jika form data maka akan tersplit
 			body := strings.Split(reqBody.String(), "----------------------------")
 
 			var (
@@ -40,18 +41,12 @@ func Logger() gin.HandlerFunc {
 			)
 
 			for _, b := range body {
-				if strings.Contains(b, "image") {
+				if strings.Contains(b, "image") { // jika terdapat gambar pada req body
 					fileBody = "----------------------------" + strings.Split(b, "\r\n\r\n")[0]
-					// c.JSON(http.StatusInternalServerError, dto.ErrorResult{
-					// 	Status:  http.StatusInternalServerError,
-					// 	Message: b,
-					// })
-					// c.Abort()
-					// return
 				} else {
-					if len(b) >= 1 && b[0] == '{' {
+					if len(b) >= 1 && b[0] == '{' { // jika berbentuk json (ditandai dengan awalnya adalah '{' )
 						textBody += b
-					} else if b != "" {
+					} else if b != "" { // jika datanya adalah form-data
 						textBody += "----------------------------" + b
 					}
 				}
@@ -59,8 +54,6 @@ func Logger() gin.HandlerFunc {
 
 			logData.Body = textBody
 			logData.File = fileBody
-		} else if reqBody.String() != "" {
-			logData.Body = reqBody.String()
 		}
 
 		c.Next()
