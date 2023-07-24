@@ -11,6 +11,7 @@ import (
 func RunMigration() {
 	err := postgres.DB.AutoMigrate(
 		// put all models struct here
+		&models.Log{},
 		&models.MstRole{},
 	)
 	if err != nil {

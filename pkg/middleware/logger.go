@@ -60,7 +60,7 @@ func Logger() gin.HandlerFunc {
 
 		logData.ResposeTime = time.Since(logData.Date).Seconds()
 		logData.StatusCode = c.Writer.Status()
-		logData.Message = c.Errors.String()
+		// logData.Message = c.Errors.String()
 
 		db.Create(&logData)
 	}

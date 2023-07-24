@@ -15,5 +15,5 @@ type Log struct {
 	File        string
 	ResposeTime float64
 	StatusCode  int
-	Message     string `gorm:"type:varchar(255)"`
+	// Message     string `gorm:"type:varchar(255)"`
 }
