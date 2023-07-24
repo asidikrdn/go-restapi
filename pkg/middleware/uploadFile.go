@@ -40,7 +40,7 @@ func UploadSingleFile() gin.HandlerFunc {
 
 		// validation format file
 		if filepath.Ext(file.Filename) != ".jpg" && filepath.Ext(file.Filename) != ".jpeg" && filepath.Ext(file.Filename) != ".png" {
-			response := dto.ErrorResult{
+			response := dto.Result{
 				Status:  http.StatusBadRequest,
 				Message: "Invalid file type",
 			}
@@ -64,7 +64,7 @@ func UploadSingleFile() gin.HandlerFunc {
 		// Upload the file to specific dst.
 		err = c.SaveUploadedFile(file, fileLocation)
 		if err != nil {
-			response := dto.ErrorResult{
+			response := dto.Result{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			}
@@ -117,7 +117,7 @@ func UploadMultipleFiles() gin.HandlerFunc {
 
 			// validation format file
 			if filepath.Ext(file.Filename) != ".jpg" && filepath.Ext(file.Filename) != ".jpeg" && filepath.Ext(file.Filename) != ".png" {
-				response := dto.ErrorResult{
+				response := dto.Result{
 					Status:  http.StatusBadRequest,
 					Message: "Invalid file type",
 				}
@@ -141,7 +141,7 @@ func UploadMultipleFiles() gin.HandlerFunc {
 			// Upload the file to specific dst.
 			err = c.SaveUploadedFile(file, fileLocation)
 			if err != nil {
-				response := dto.ErrorResult{
+				response := dto.Result{
 					Status:  http.StatusBadRequest,
 					Message: err.Error(),
 				}
