@@ -10,9 +10,9 @@ import (
 // migration up
 func RunMigration() {
 	err := postgres.DB.AutoMigrate(
-		// put all models struct here
 		&models.Log{},
-		&models.MstRole{},
+		&models.MstRole{}, &models.MstUser{},
+		// put another models struct here
 	)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -25,8 +25,9 @@ func RunMigration() {
 // migration down
 func DropMigration() {
 	err := postgres.DB.Migrator().DropTable(
-		// put all models struct here
-		&models.MstRole{},
+		&models.Log{},
+		&models.MstRole{}, &models.MstUser{},
+		// put another models struct here
 	)
 
 	if err != nil {
