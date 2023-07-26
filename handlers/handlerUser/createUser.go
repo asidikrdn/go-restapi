@@ -13,6 +13,7 @@ import (
 func (h *handlerUser) CreateUser(c *gin.Context) {
 	var request dto.CreateUserRequest
 
+	// get request data
 	err := c.ShouldBind(&request)
 	if err != nil {
 		response := dto.Result{
@@ -45,6 +46,7 @@ func (h *handlerUser) CreateUser(c *gin.Context) {
 		return
 	}
 
+	// create new user
 	user := models.MstUser{
 		ID:              uuid.New(),
 		FullName:        request.FullName,
@@ -73,6 +75,7 @@ func (h *handlerUser) CreateUser(c *gin.Context) {
 		user.Image = image.(string)
 	}
 
+	// save new user data to database
 	addedUser, err := h.UserRepository.CreateUser(&user)
 	if err != nil {
 		response := dto.Result{
@@ -115,6 +118,7 @@ func (h *handlerUser) CreateUser(c *gin.Context) {
 		return
 	}
 
+	// send response
 	response := dto.Result{
 		Status:  http.StatusCreated,
 		Message: "OK",

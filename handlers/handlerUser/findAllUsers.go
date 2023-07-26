@@ -18,9 +18,11 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
 		filterQuery dto.UserFilter
 	)
 
+	// get filter data
 	roleId, _ := strconv.Atoi(c.Query("roleId"))
 	filterQuery.RoleID = uint(roleId)
 
+	// get search query
 	searchQuery := c.Query("search")
 
 	// with pagination
@@ -97,7 +99,7 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
 			return
 		}
 
-		// setup and send response
+		// response
 		response := dto.Result{
 			Status:      http.StatusOK,
 			Message:     "OK",

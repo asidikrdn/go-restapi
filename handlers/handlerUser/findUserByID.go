@@ -10,6 +10,7 @@ import (
 )
 
 func (h *handlerUser) FindUserByID(c *gin.Context) {
+	// get userid
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		response := dto.Result{
@@ -20,6 +21,7 @@ func (h *handlerUser) FindUserByID(c *gin.Context) {
 		return
 	}
 
+	// get user data
 	user, err := h.UserRepository.FindUserByID(id)
 	if err != nil {
 		response := dto.Result{
@@ -30,6 +32,7 @@ func (h *handlerUser) FindUserByID(c *gin.Context) {
 		return
 	}
 
+	// send response
 	response := dto.Result{
 		Status:  http.StatusOK,
 		Message: "OK",
@@ -39,6 +42,7 @@ func (h *handlerUser) FindUserByID(c *gin.Context) {
 }
 
 func (h *handlerUser) GetProfile(c *gin.Context) {
+	// get jwt payload
 	claims, ok := c.Get("userData")
 	if !ok {
 		response := dto.Result{
@@ -49,9 +53,11 @@ func (h *handlerUser) GetProfile(c *gin.Context) {
 		return
 	}
 
+	// extract user data from jwt claims
 	userData := claims.(jwt.MapClaims)
-	id, err := uuid.Parse(userData["id"].(string))
 
+	// get userid
+	id, err := uuid.Parse(userData["id"].(string))
 	if err != nil {
 		response := dto.Result{
 			Status:  http.StatusInternalServerError,
@@ -61,6 +67,7 @@ func (h *handlerUser) GetProfile(c *gin.Context) {
 		return
 	}
 
+	// get user data
 	user, err := h.UserRepository.FindUserByID(id)
 	if err != nil {
 		response := dto.Result{
@@ -71,6 +78,7 @@ func (h *handlerUser) GetProfile(c *gin.Context) {
 		return
 	}
 
+	// send response
 	response := dto.Result{
 		Status:  http.StatusOK,
 		Message: "OK",
