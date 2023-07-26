@@ -25,8 +25,8 @@ func User(r *gin.RouterGroup) {
 	r.GET("/users/profile", middleware.UserAuth(), h.GetProfile)
 
 	// update user
-	r.POST("/users/:id", middleware.AdminAuth(), middleware.UploadSingleFile(), h.UpdateUserByID)
-	r.POST("/users/profile", middleware.UserAuth(), middleware.UploadSingleFile(), h.UpdateProfile)
+	r.PATCH("/users/:id", middleware.AdminAuth(), middleware.UploadSingleFile(), h.UpdateUserByID)
+	r.PATCH("/users/profile", middleware.UserAuth(), middleware.UploadSingleFile(), h.UpdateProfile)
 
 	// delete user
 	r.DELETE("/users/:id", middleware.SuperAdminAuth(), h.DeleteUser)
