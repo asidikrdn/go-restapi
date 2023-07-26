@@ -61,11 +61,12 @@ func (r *repository) FindAllUsers(limit, offset int, filter dto.UserFilter, sear
 	trx = trx.Joins("JOIN mst_roles ON mst_roles.id = mst_users.role_id")
 
 	if searchQuery != "" {
-		trx = trx.Where("full_name LIKE ?", fmt.Sprintf("%s%s%s", "%", searchQuery, "%")).
-			Or("email LIKE ?", fmt.Sprintf("%s%s%s", "%", searchQuery, "%")).
-			Or("phone LIKE ?", fmt.Sprintf("%s%s%s", "%", searchQuery, "%")).
-			Or("address LIKE ?", fmt.Sprintf("%s%s%s", "%", searchQuery, "%")).
-			Or("mst_roles.role LIKE ?", fmt.Sprintf("%s%s%s", "%", searchQuery, "%"))
+		trx = trx.Where("full_name LIKE ? OR email LIKE ? OR phone LIKE ? OR address LIKE ? OR mst_roles.role LIKE ?",
+			fmt.Sprintf("%%%s%%", searchQuery), // full_name
+			fmt.Sprintf("%%%s%%", searchQuery), // email
+			fmt.Sprintf("%%%s%%", searchQuery), // phone
+			fmt.Sprintf("%%%s%%", searchQuery), // address
+			fmt.Sprintf("%%%s%%", searchQuery)) // role
 	}
 
 	// preloading, used for get relation data for results
@@ -89,8 +90,7 @@ func (r *repository) GetUserByEmailOrPhone(searchQuery string) (*models.MstUser,
 	trx := r.db.Session(&gorm.Session{})
 
 	if searchQuery != "" {
-		trx = trx.Where("email = ?", searchQuery).
-			Or("phone = ?", searchQuery)
+		trx = trx.Where("email = ? OR phone = ?", searchQuery, searchQuery)
 	}
 
 	// preloading, used for get relation data for results

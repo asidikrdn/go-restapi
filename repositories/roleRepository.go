@@ -21,7 +21,7 @@ func (r *repository) FindAllRole(limit, offset int, searchQuery string) (*[]mode
 	trx := r.db.Session(&gorm.Session{})
 
 	if searchQuery != "" {
-		trx = trx.Where("role LIKE ?", fmt.Sprintf("%s%s%s", "%", searchQuery, "%"))
+		trx = trx.Where("role LIKE ?", fmt.Sprintf("%%%s%%", searchQuery))
 	}
 
 	trx.Model(&models.MstRole{}).
