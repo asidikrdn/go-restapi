@@ -14,8 +14,8 @@ func Role(r *gin.RouterGroup) {
 	h := handlerRole.HandlerRole(roleRepository)
 
 	// find all role
-	r.GET("/roles", middleware.UserAuth(), h.FindAllRole)
+	r.GET("/roles", middleware.AdminAuth(), h.FindAllRole)
 
 	// find role by id
-	r.GET("/roles/:id", middleware.UserAuth(), h.FindRoleByID)
+	r.GET("/roles/:id", middleware.AdminAuth(), h.FindRoleByID)
 }
