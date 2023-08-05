@@ -16,6 +16,9 @@ func User(r *gin.RouterGroup) {
 	// login
 	r.POST("/login", h.Login)
 
+	// check auth
+	r.GET("/check-auth", middleware.UserAuth(), h.CheckAuth)
+
 	// create new user
 	r.POST("/users", middleware.AdminAuth(), middleware.UploadSingleFile(), h.CreateUser)
 
