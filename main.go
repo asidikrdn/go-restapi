@@ -39,20 +39,20 @@ func main() {
 	// call logger middleware before route to any routes
 	router.Use(middleware.Logger())
 
+	//	set up CORS middleware
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"} // Replace with your allowed origins
+	config.AllowMethods = []string{"HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"}
+	config.AllowHeaders = []string{"Origin", "X-Requested-With", "Content-Type", "Authorization"}
+
+	// Add cors middleware on all route
+	router.Use(cors.New(config))
+
 	// call routerinit with pathprefix
 	routes.RouterInit(router.Group("/api/v1"))
 
 	// file server endpoint
 	router.Static("/static", "./uploads")
-
-	//	set up CORS middleware
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://example.com"} // Replace with your allowed origins
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	config.AllowHeaders = []string{"Origin", "Content-Type"}
-
-	// Add cors middleware on all route
-	router.Use(cors.New(config))
 
 	// Running services
 	fmt.Println("server running on localhost:" + os.Getenv("PORT"))
