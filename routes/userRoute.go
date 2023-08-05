@@ -29,5 +29,5 @@ func User(r *gin.RouterGroup) {
 	r.PATCH("/users/profile", middleware.UserAuth(), middleware.UploadSingleFile(), h.UpdateProfile)
 
 	// delete user
-	r.DELETE("/users/:id", middleware.SuperAdminAuth(), h.DeleteUser)
+	r.DELETE("/users/:id", middleware.AdminAuth(), h.DeleteUser)
 }
