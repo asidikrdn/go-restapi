@@ -16,7 +16,7 @@ The application follows the Uncle Bob "[Clean Architecture](https://blog.cleanco
 ```text
 app
   └ database                        → Migration & Seeder functions from models to database
-  └ dto                             → Converter objects that transform outside objects (ex: HTTP request payload) to inside objects (ex: database models), or vice versa 
+  └ dto                             → Converter objects that transform outside objects (ex: HTTP request payload) to inside objects (ex: database models), or vice versa
   └ handlers                        → Contains any function to handle the request and serve the response
   └ models                          → Initalize models that want to be migrated to database
   └ pkg                             → Frameworks, drivers and tools such as Database, custom middleware, mailing/logging/glue code etc
@@ -53,7 +53,32 @@ The required environment variables to run this application are available in the 
 Before run this apps, you must install and run the PostgreSQL database. After that, create a new database with name depend on your .env file.
 And this is step-by-step to run this application :
 
-- Run on terminal `git clone https://github.com/asidikrdn/go-restapi-boilerplate.git`
-- Run on terminal `go mod download`
-- Edit and customize this app depending on your needs
-- Run on terminal `go run main.go`
+1. Clone the repository by running the following command in your terminal:
+
+   ```sh
+   git clone https://github.com/asidikrdn/go-restapi-boilerplate.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```sh
+   cd go-restapi-boilerplate
+   ```
+
+3. Install dependencies using Go Modules:
+
+   ```sh
+   go mod download
+   ```
+
+4. Duplicate the .env.example file and rename it to .env. Customize the values of the environment variables as needed.
+
+5. Launch the application with the following command:
+
+   ```sh
+   go run main.go
+   ```
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
