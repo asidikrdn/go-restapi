@@ -20,12 +20,8 @@ func UploadSingleFile() gin.HandlerFunc {
 		//  parsing form with max memory size 8 Mb
 		errParsing := c.Request.ParseMultipartForm(8192)
 		if errParsing != nil {
-			response := dto.ErrorResult{
-				Status:  http.StatusBadRequest,
-				Message: errParsing.Error(),
-			}
-			c.JSON(http.StatusBadRequest, response)
-			c.Abort()
+			fmt.Println("Request parse error: ", errParsing)
+			c.Next()
 			return
 		}
 
@@ -44,7 +40,7 @@ func UploadSingleFile() gin.HandlerFunc {
 
 		// validation format file
 		if filepath.Ext(file.Filename) != ".jpg" && filepath.Ext(file.Filename) != ".jpeg" && filepath.Ext(file.Filename) != ".png" {
-			response := dto.ErrorResult{
+			response := dto.Result{
 				Status:  http.StatusBadRequest,
 				Message: "Invalid file type",
 			}
@@ -68,7 +64,7 @@ func UploadSingleFile() gin.HandlerFunc {
 		// Upload the file to specific dst.
 		err = c.SaveUploadedFile(file, fileLocation)
 		if err != nil {
-			response := dto.ErrorResult{
+			response := dto.Result{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			}
@@ -99,12 +95,8 @@ func UploadMultipleFiles() gin.HandlerFunc {
 		//  parsing form with max memory size 8 Mb
 		errParsing := c.Request.ParseMultipartForm(8192)
 		if errParsing != nil {
-			response := dto.ErrorResult{
-				Status:  http.StatusBadRequest,
-				Message: errParsing.Error(),
-			}
-			c.JSON(http.StatusBadRequest, response)
-			c.Abort()
+			fmt.Println("Request parse error: ", errParsing)
+			c.Next()
 			return
 		}
 
@@ -125,7 +117,7 @@ func UploadMultipleFiles() gin.HandlerFunc {
 
 			// validation format file
 			if filepath.Ext(file.Filename) != ".jpg" && filepath.Ext(file.Filename) != ".jpeg" && filepath.Ext(file.Filename) != ".png" {
-				response := dto.ErrorResult{
+				response := dto.Result{
 					Status:  http.StatusBadRequest,
 					Message: "Invalid file type",
 				}
@@ -149,7 +141,7 @@ func UploadMultipleFiles() gin.HandlerFunc {
 			// Upload the file to specific dst.
 			err = c.SaveUploadedFile(file, fileLocation)
 			if err != nil {
-				response := dto.ErrorResult{
+				response := dto.Result{
 					Status:  http.StatusBadRequest,
 					Message: err.Error(),
 				}

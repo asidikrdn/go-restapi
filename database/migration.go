@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"go-restapi-boilerplate/models"
 	"go-restapi-boilerplate/pkg/postgres"
 	"log"
 )
@@ -9,8 +10,9 @@ import (
 // migration up
 func RunMigration() {
 	err := postgres.DB.AutoMigrate(
-	// put all models struct here
-	// ex : &models.User{}
+		&models.Log{},
+		&models.MstRole{}, &models.MstUser{},
+		// put another models struct here
 	)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -23,8 +25,9 @@ func RunMigration() {
 // migration down
 func DropMigration() {
 	err := postgres.DB.Migrator().DropTable(
-	// put all models struct here
-	// ex : &models.User{}
+		&models.Log{},
+		&models.MstRole{}, &models.MstUser{},
+		// put another models struct here
 	)
 
 	if err != nil {

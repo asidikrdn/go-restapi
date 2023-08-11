@@ -12,7 +12,7 @@ func GenerateToken(claims *jwt.MapClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// sign the token with secret key
-	webtoken, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+	webtoken, err := token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 	if err != nil {
 		return "", err
 	}
