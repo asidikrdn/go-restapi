@@ -1,4 +1,4 @@
-package handlerUser
+package handlerAuth
 
 import (
 	"go-restapi-boilerplate/dto"
@@ -9,11 +9,10 @@ import (
 
 	"github.com/asidikrdn/otptimize"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 )
 
-func (h *handlerUser) CreateUserByAdmin(c *gin.Context) {
+func (h *handlerAuth) RegisterUser(c *gin.Context) {
 	var request dto.RegisterRequest
 
 	// get request data
@@ -24,40 +23,6 @@ func (h *handlerUser) CreateUserByAdmin(c *gin.Context) {
 			Message: err.Error(),
 		}
 		c.JSON(http.StatusBadRequest, response)
-		return
-	}
-
-	// get jwt payload
-	claims, ok := c.Get("userData")
-	if !ok {
-		response := dto.Result{
-			Status:  http.StatusBadRequest,
-			Message: "User data not found",
-		}
-		c.JSON(http.StatusInternalServerError, response)
-		return
-	}
-
-	// read user data from jwt payload
-	userData := claims.(jwt.MapClaims)
-	id, err := uuid.Parse(userData["id"].(string))
-	if err != nil {
-		response := dto.Result{
-			Status:  http.StatusInternalServerError,
-			Message: err.Error(),
-		}
-		c.JSON(http.StatusInternalServerError, response)
-		return
-	}
-
-	// get admin data from database
-	admin, err := h.UserRepository.FindUserByID(id)
-	if err != nil {
-		response := dto.Result{
-			Status:  http.StatusNotFound,
-			Message: err.Error(),
-		}
-		c.JSON(http.StatusNotFound, response)
 		return
 	}
 
@@ -92,11 +57,8 @@ func (h *handlerUser) CreateUserByAdmin(c *gin.Context) {
 		Phone:           request.Phone,
 		IsPhoneVerified: false,
 		Address:         request.Address,
-		// RoleID:          request.RoleID,
+		RoleID:          3,
 	}
-
-	// admin only can create user, but superadmin can create user & admin
-	createRole(admin, &user, request.RoleID)
 
 	// hashing password
 	user.Password, err = bcrypt.HashingPassword(request.Password)
@@ -144,15 +106,7 @@ func (h *handlerUser) CreateUserByAdmin(c *gin.Context) {
 	response := dto.Result{
 		Status:  http.StatusCreated,
 		Message: "OK",
-		Data:    convertUserResponse(newUser),
+		Data:    convertRegisterResponse(newUser),
 	}
 	c.JSON(http.StatusCreated, response)
-}
-
-func createRole(admin *models.MstUser, user *models.MstUser, requestData uint) {
-	if admin.RoleID != 1 {
-		user.RoleID = 3
-	} else if admin.RoleID == 1 {
-		user.RoleID = requestData
-	}
 }

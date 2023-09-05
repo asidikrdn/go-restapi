@@ -7,7 +7,9 @@ import (
 	"go-restapi-boilerplate/pkg/postgres"
 	"go-restapi-boilerplate/routes"
 	"os"
+	"strconv"
 
+	"github.com/asidikrdn/otptimize"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -16,14 +18,28 @@ import (
 func main() {
 
 	// load environment variables
-	err := godotenv.Load()
+	err := godotenv.Load("config.env")
 	if err != nil {
 		fmt.Println("Error loading environment variables file, the apps will read global environtment variabels on this system")
 	}
 
 	// database initialization
 	postgres.DatabaseInit()
-	// redis.RedisInit()
+
+	// otptimize connection init
+	mailPort, _ := strconv.Atoi(os.Getenv("CONFIG_SMTP_PORT"))
+	mailConfig := otptimize.MailConfig{
+		Host:     os.Getenv("CONFIG_SMTP_HOST"),
+		Port:     mailPort,
+		Email:    os.Getenv("CONFIG_AUTH_EMAIL"),
+		Password: os.Getenv("CONFIG_AUTH_PASSWORD"),
+	}
+	redisConfig := otptimize.RedisConfig{
+		Host:     os.Getenv("REDIS_HOST"),
+		Port:     os.Getenv("REDIS_PORT"),
+		Password: os.Getenv("REDIS_PASSWORD"),
+	}
+	otptimize.ConnectionInit(mailConfig, redisConfig)
 
 	// database migration & seeder
 	database.DropMigration()

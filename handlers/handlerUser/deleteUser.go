@@ -60,7 +60,7 @@ func (h *handlerUser) DeleteUser(c *gin.Context) {
 
 	// if they are not superadmin
 	if loginRoleId != 1 {
-		// can't delete another role (admin only can delete customer)
+		// can't delete another role (admin only can delete user)
 		if user.RoleID != 3 {
 			response := dto.Result{
 				Status:  http.StatusBadRequest,

@@ -3,6 +3,7 @@ package handlerUser
 import (
 	"fmt"
 	"go-restapi-boilerplate/dto"
+	"go-restapi-boilerplate/models"
 	"go-restapi-boilerplate/pkg/helpers"
 	"net/http"
 
@@ -48,31 +49,54 @@ func (h *handlerUser) UpdateUserByID(c *gin.Context) {
 	}
 
 	// update fullname
-	if request.FullName != "" {
-		user.FullName = request.FullName
-	}
+	updateFullname(user, request.FullName)
 
 	// update email
-	if request.Email != "" {
-		user.Email = request.Email
-		user.IsEmailVerified = false
-	}
+	updateEmail(user, request.Email)
 
 	// update phone
-	if request.Phone != "" {
-		user.Phone = request.Phone
-		user.IsPhoneVerified = false
-	}
+	updatePhone(user, request.Phone)
 
 	// update address
-	if request.Address != "" {
-		user.Address = request.Address
+	updateAddress(user, request.Address)
+
+	// get jwt payload
+	claims, ok := c.Get("userData")
+	if !ok {
+		response := dto.Result{
+			Status:  http.StatusBadRequest,
+			Message: "User data not found",
+		}
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	// read user data from jwt payload
+	userData := claims.(jwt.MapClaims)
+	id, err = uuid.Parse(userData["id"].(string))
+	if err != nil {
+		response := dto.Result{
+			Status:  http.StatusInternalServerError,
+			Message: err.Error(),
+		}
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	// get admin data from database
+	admin, err := h.UserRepository.FindUserByID(id)
+	if err != nil {
+		response := dto.Result{
+			Status:  http.StatusNotFound,
+			Message: err.Error(),
+		}
+		c.JSON(http.StatusNotFound, response)
+		return
 	}
 
 	// update role
-	if request.RoleID != 0 {
-		user.RoleID = request.RoleID
-	}
+
+	updateRole(admin, user, request.RoleID)
 
 	// update image
 	image, ok := c.Get("image")
@@ -166,31 +190,16 @@ func (h *handlerUser) UpdateProfile(c *gin.Context) {
 	}
 
 	// update fullname
-	if request.FullName != "" {
-		user.FullName = request.FullName
-	}
+	updateFullname(user, request.FullName)
 
 	// update email
-	if request.Email != "" {
-		user.Email = request.Email
-		user.IsEmailVerified = false
-	}
+	updateEmail(user, request.Email)
 
 	// update phone
-	if request.Phone != "" {
-		user.Phone = request.Phone
-		user.IsPhoneVerified = false
-	}
+	updatePhone(user, request.Phone)
 
 	// update address
-	if request.Address != "" {
-		user.Address = request.Address
-	}
-
-	// update role
-	// if request.RoleID != 0 {
-	// 	user.RoleID = request.RoleID
-	// }
+	updateAddress(user, request.Address)
 
 	// update image
 	image, ok := c.Get("image")
@@ -232,4 +241,39 @@ func (h *handlerUser) UpdateProfile(c *gin.Context) {
 		Data:    convertUserResponse(user),
 	}
 	c.JSON(http.StatusOK, response)
+}
+
+func updateFullname(user *models.MstUser, requestData string) {
+	if requestData != "" && requestData != user.FullName {
+		user.FullName = requestData
+	}
+}
+
+func updateEmail(user *models.MstUser, requestData string) {
+	if requestData != "" && requestData != user.Email {
+		user.IsEmailVerified = false
+		user.Email = requestData
+	}
+}
+
+func updatePhone(user *models.MstUser, requestData string) {
+	if requestData != "" && requestData != user.Phone {
+		user.IsPhoneVerified = false
+		user.Phone = requestData
+	}
+}
+
+func updateAddress(user *models.MstUser, requestData string) {
+	if requestData != "" && requestData != user.Address {
+		user.Address = requestData
+	}
+}
+
+func updateRole(admin *models.MstUser, user *models.MstUser, requestData uint) {
+	// only superadmin can update role
+	fmt.Println("admin role -> ", admin.RoleID)
+	if admin.RoleID == 1 {
+		fmt.Println("true")
+		user.RoleID = requestData
+	}
 }

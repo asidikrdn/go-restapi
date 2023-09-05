@@ -25,8 +25,22 @@ func (r *repository) CreateUser(user *models.MstUser) (*models.MstUser, error) {
 }
 
 func (r *repository) UpdateUser(user *models.MstUser) (*models.MstUser, error) {
-	err := r.db.Model(&user).
-		Updates(*user).Error
+	query := fmt.Sprintf(`update 
+													mst_users 
+												set  
+													full_name = '%s', 
+													email = '%s',
+													is_email_verified = '%t',
+													phone = '%s',
+													is_phone_verified = '%t',
+													address = '%s',
+													password = '%s',
+													role_id = '%d',
+													image = '%s'
+												where
+													id = '%s'`, user.FullName, user.Email, user.IsEmailVerified, user.Phone, user.IsPhoneVerified, user.Address, user.Password, user.RoleID, user.Image, user.ID)
+
+	err := r.db.Exec(query).Error
 
 	return user, err
 }
@@ -61,12 +75,14 @@ func (r *repository) FindAllUsers(limit, offset int, filter dto.UserFilter, sear
 	trx = trx.Joins("JOIN mst_roles ON mst_roles.id = mst_users.role_id")
 
 	if searchQuery != "" {
+		searchQuery = fmt.Sprintf("%%%s%%", searchQuery)
+
 		trx = trx.Where("full_name LIKE ? OR email LIKE ? OR phone LIKE ? OR address LIKE ? OR mst_roles.role LIKE ?",
-			fmt.Sprintf("%%%s%%", searchQuery), // full_name
-			fmt.Sprintf("%%%s%%", searchQuery), // email
-			fmt.Sprintf("%%%s%%", searchQuery), // phone
-			fmt.Sprintf("%%%s%%", searchQuery), // address
-			fmt.Sprintf("%%%s%%", searchQuery)) // role
+			searchQuery, // full_name
+			searchQuery, // email
+			searchQuery, // phone
+			searchQuery, // address
+			searchQuery) // role
 	}
 
 	// preloading, used for get relation data for results
