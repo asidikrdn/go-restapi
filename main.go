@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"go-restapi-boilerplate/database"
+	"go-restapi-boilerplate/config/postgres"
+	"go-restapi-boilerplate/db/migrations"
+	"go-restapi-boilerplate/db/seeders"
 	"go-restapi-boilerplate/pkg/middleware"
-	"go-restapi-boilerplate/pkg/postgres"
 	"go-restapi-boilerplate/routes"
 	"os"
 	"strconv"
@@ -42,9 +43,9 @@ func main() {
 	otptimize.ConnectionInit(mailConfig, redisConfig)
 
 	// database migration & seeder
-	database.DropMigration()
-	database.RunMigration()
-	database.RunSeeder()
+	migrations.DropMigration()
+	migrations.RunMigration()
+	seeders.RunSeeder()
 
 	// gin Mode
 	gin.SetMode(os.Getenv("GIN_MODE"))
