@@ -48,6 +48,16 @@ Stack in this boilerplate :
 
 The required environment variables to run this application are available in the .env.example file. Please copy that file to a new .env file and adjust its contents according to your needs
 
+## API Documentation
+
+- [View Postman Documentation](https://documenter.getpostman.com/view/23687279/2s9YBxXaR2)
+
+<!-- ![Screenshot Dokumentasi Postman](postman/screenshot.png) -->
+
+IThis is our API documentation created with Postman. This documentation provides a comprehensive description of all endpoints and how to use them. Make sure to refer to this documentation while developing or integrating with our API.
+
+**Documentation Updates:** This documentation is periodically updated to reflect changes to our API. Be sure to always refer to the latest documentation.
+
 ## SetUp
 
 Before run this apps, you must install and run the PostgreSQL database. After that, create a new database with name depend on your .env file.

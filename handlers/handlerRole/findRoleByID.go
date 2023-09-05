@@ -1,7 +1,6 @@
 package handlerRole
 
 import (
-	"fmt"
 	"go-restapi-boilerplate/dto"
 	"net/http"
 	"strconv"
@@ -16,7 +15,6 @@ func (h *handlerRole) FindRoleByID(c *gin.Context) {
 	// get role data from database
 	role, err := h.RoleRepository.FindRoleByID(uint(id))
 	if err != nil {
-		fmt.Println(err.Error())
 		response := dto.Result{
 			Status:  http.StatusNotFound,
 			Message: err.Error(),

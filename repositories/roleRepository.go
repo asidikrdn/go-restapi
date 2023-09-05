@@ -10,6 +10,10 @@ import (
 type RoleRepository interface {
 	FindAllRole(limit, offset int, searchQuery string) (*[]models.MstRole, int64, error)
 	FindRoleByID(roleID uint) (*models.MstRole, error)
+	CreateRole(role *models.MstRole) (*models.MstRole, error)
+	UpdateRole(role *models.MstRole) (*models.MstRole, error)
+	DeleteRole(role *models.MstRole) (*models.MstRole, error)
+	CheckIsRoleUsed(role *models.MstRole) (bool, error)
 }
 
 func (r *repository) FindAllRole(limit, offset int, searchQuery string) (*[]models.MstRole, int64, error) {
@@ -40,4 +44,34 @@ func (r *repository) FindRoleByID(roleID uint) (*models.MstRole, error) {
 		First(&role).Error
 
 	return &role, err
+}
+
+func (r *repository) CreateRole(role *models.MstRole) (*models.MstRole, error) {
+	err := r.db.Create(role).Error
+
+	return role, err
+}
+
+func (r *repository) UpdateRole(role *models.MstRole) (*models.MstRole, error) {
+	err := r.db.Model(role).Updates(*role).Error
+
+	return role, err
+}
+
+func (r *repository) DeleteRole(role *models.MstRole) (*models.MstRole, error) {
+	err := r.db.Delete(role).Error
+
+	return role, err
+}
+
+func (r *repository) CheckIsRoleUsed(role *models.MstRole) (bool, error) {
+	var count int
+
+	err := r.db.Raw("select count(*) from mst_roles mr join mst_users mu on mr.id  = mu.role_id where mr.id = ?", role.ID).Scan(&count).Error
+
+	if count > 0 {
+		return true, err
+	}
+
+	return false, err
 }
