@@ -7,5 +7,5 @@ import (
 // Role
 type MstRole struct {
 	gorm.Model
-	Role string
+	Role string `gorm:"unique"`
 }
