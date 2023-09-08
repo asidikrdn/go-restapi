@@ -10,7 +10,7 @@ package handlers
 
 import (
  "go-restapi-boilerplate/dto"
- "go-restapi-boilerplate/models"
+ "go-restapi-boilerplate/db/models"
  "go-restapi-boilerplate/repositories"
 )
 

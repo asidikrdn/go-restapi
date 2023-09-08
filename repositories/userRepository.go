@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"fmt"
+	"go-restapi-boilerplate/db/models"
 	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/models"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

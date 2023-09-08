@@ -1,8 +1,8 @@
 package handlerUser
 
 import (
+	"go-restapi-boilerplate/db/models"
 	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/models"
 	"math"
 	"net/http"
 	"strconv"
@@ -27,11 +27,6 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
 
 	// with pagination
 	if c.Query("page") != "" {
-		var (
-			limit  int
-			offset int
-		)
-
 		page, err := strconv.Atoi(c.Query("page"))
 		if err != nil {
 			response := dto.Result{
@@ -43,27 +38,18 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
 		}
 
 		// set limit (if not exist, use default limit -> 5)
-		if c.Query("limit") != "" {
-			limit, err = strconv.Atoi(c.Query("limit"))
-			if err != nil {
-				response := dto.Result{
-					Status:  http.StatusBadRequest,
-					Message: err.Error(),
-				}
-				c.JSON(http.StatusBadRequest, response)
-				return
+		limit, err := getLimitParam(c)
+		if err != nil {
+			response := dto.Result{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
 			}
-		} else {
-			limit = 5
-
+			c.JSON(http.StatusBadRequest, response)
+			return
 		}
 
 		// set offset
-		if page == 1 {
-			offset = -1
-		} else {
-			offset = (page * limit) - limit
-		}
+		offset := getOffset(page, limit)
 
 		// get all users
 		users, totalUser, err = h.UserRepository.FindAllUsers(limit, offset, filterQuery, searchQuery)
@@ -110,4 +96,18 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, response)
 	}
+}
+
+func getLimitParam(c *gin.Context) (int, error) {
+	if c.Query("limit") != "" {
+		return strconv.Atoi(c.Query("limit"))
+	}
+	return 5, nil
+}
+
+func getOffset(page, limit int) int {
+	if page == 1 {
+		return -1
+	}
+	return (page * limit) - limit
 }

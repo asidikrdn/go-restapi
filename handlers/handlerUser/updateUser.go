@@ -2,8 +2,8 @@ package handlerUser
 
 import (
 	"fmt"
+	"go-restapi-boilerplate/db/models"
 	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/models"
 	"go-restapi-boilerplate/pkg/helpers"
 	"net/http"
 

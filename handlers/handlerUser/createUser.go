@@ -1,8 +1,8 @@
 package handlerUser
 
 import (
+	"go-restapi-boilerplate/db/models"
 	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/models"
 	"go-restapi-boilerplate/pkg/bcrypt"
 	"net/http"
 	"os"

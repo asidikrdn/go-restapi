@@ -1,8 +1,8 @@
 package handlerRole
 
 import (
+	"go-restapi-boilerplate/db/models"
 	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/models"
 	"math"
 	"net/http"
 	"strconv"
