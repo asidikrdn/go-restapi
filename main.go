@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"go-restapi/config/postgres"
 	"go-restapi/db/migrations"
@@ -8,8 +9,12 @@ import (
 	"go-restapi/pkg/middleware"
 	"go-restapi/routes"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
+	"time"
 
 	"github.com/asidikrdn/otptimize"
 	"github.com/gin-contrib/cors"
@@ -72,7 +77,34 @@ func main() {
 	// file server endpoint
 	router.Static("/static", "./uploads")
 
+	// create server
+	srv := &http.Server{
+		Addr:    os.Getenv("PORT"),
+		Handler: router,
+	}
+
+	// Create a channel for graceful shutdown
+	shutdownChan := make(chan os.Signal, 1)
+	signal.Notify(shutdownChan, os.Interrupt, syscall.SIGTERM)
+
 	// Running services
-	fmt.Println("server running on http://localhost:" + os.Getenv("PORT"))
-	router.Run(":" + os.Getenv("PORT"))
+	fmt.Println("server running on http://localhost:" + srv.Addr)
+	srv.ListenAndServe()
+
+	// Wait for a signal to gracefully shutdown
+	<-shutdownChan
+	log.Println("Received shutdown signal. Performing graceful shutdown...")
+
+	// create context with timeout ** second
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// start gracefully shutdown
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+
+	// catching ctx.Done()
+	<-ctx.Done()
+	log.Println("Server gracefully shut down !")
 }
