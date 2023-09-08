@@ -33,7 +33,7 @@ func UploadSingleFile() gin.HandlerFunc {
 			return
 		}
 
-		log.Println(file.Filename)
+		// log.Println(file.Filename)
 
 		// validation format file
 		if filepath.Ext(file.Filename) != ".jpg" && filepath.Ext(file.Filename) != ".jpeg" && filepath.Ext(file.Filename) != ".png" {
@@ -90,7 +90,7 @@ func UploadMultipleFiles() gin.HandlerFunc {
 		}
 
 		for _, file := range files {
-			log.Println(file.Filename)
+			// log.Println(file.Filename)
 
 			// validation format file
 			if filepath.Ext(file.Filename) != ".jpg" && filepath.Ext(file.Filename) != ".jpeg" && filepath.Ext(file.Filename) != ".png" {
