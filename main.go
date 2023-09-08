@@ -68,7 +68,7 @@ func main() {
 	config.AllowMethods = []string{"HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"}
 	config.AllowHeaders = []string{"Origin", "X-Requested-With", "Content-Type", "Authorization"}
 
-	// Add cors middleware on all route
+	// add cors middleware on all route
 	router.Use(cors.New(config))
 
 	// call routerinit with pathprefix
@@ -83,15 +83,15 @@ func main() {
 		Handler: router,
 	}
 
-	// Create a channel for graceful shutdown
+	// create a channel for graceful shutdown
 	shutdownChan := make(chan os.Signal, 1)
 	signal.Notify(shutdownChan, os.Interrupt, syscall.SIGTERM)
 
-	// Running services
+	// running services
 	fmt.Println("server running on http://localhost:" + srv.Addr)
 	srv.ListenAndServe()
 
-	// Wait for a signal to gracefully shutdown
+	// wait for a signal to gracefully shutdown
 	<-shutdownChan
 	log.Println("Received shutdown signal. Performing graceful shutdown...")
 
