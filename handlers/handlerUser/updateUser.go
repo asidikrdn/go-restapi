@@ -1,10 +1,10 @@
 package handlerUser
 
 import (
-	"fmt"
 	"go-restapi/db/models"
 	"go-restapi/dto"
 	"go-restapi/pkg/helpers"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -103,7 +103,7 @@ func (h *handlerUser) UpdateUserByID(c *gin.Context) {
 	if ok {
 		if user.Image != "" {
 			if !helpers.DeleteFile(user.Image) {
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 			}
 		}
 
@@ -206,7 +206,7 @@ func (h *handlerUser) UpdateProfile(c *gin.Context) {
 	if ok {
 		if user.Image != "" {
 			if !helpers.DeleteFile(user.Image) {
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 			}
 		}
 
@@ -271,9 +271,7 @@ func updateAddress(user *models.MstUser, requestData string) {
 
 func updateRole(admin *models.MstUser, user *models.MstUser, requestData uint) {
 	// only superadmin can update role
-	fmt.Println("admin role -> ", admin.RoleID)
 	if admin.RoleID == 1 {
-		fmt.Println("true")
 		user.RoleID = requestData
 	}
 }

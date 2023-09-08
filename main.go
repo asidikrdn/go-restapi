@@ -7,6 +7,7 @@ import (
 	"go-restapi/db/seeders"
 	"go-restapi/pkg/middleware"
 	"go-restapi/routes"
+	"log"
 	"os"
 	"strconv"
 
@@ -21,7 +22,7 @@ func main() {
 	// load environment variables
 	err := godotenv.Load("config.env")
 	if err != nil {
-		fmt.Println("Error loading environment variables file, the apps will read global environtment variabels on this system")
+		log.Println("Error loading environment variables file, the apps will read global environtment variabels on this system")
 	}
 
 	// database initialization
@@ -72,6 +73,6 @@ func main() {
 	router.Static("/static", "./uploads")
 
 	// Running services
-	fmt.Println("server running on localhost:" + os.Getenv("PORT"))
+	fmt.Println("server running on http://localhost:" + os.Getenv("PORT"))
 	router.Run(":" + os.Getenv("PORT"))
 }

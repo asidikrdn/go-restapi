@@ -1,9 +1,9 @@
 package handlerUser
 
 import (
-	"fmt"
 	"go-restapi/dto"
 	"go-restapi/pkg/helpers"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -37,7 +37,7 @@ func (h *handlerUser) DeleteUser(c *gin.Context) {
 	// delete user image if exist
 	if user.Image != "" {
 		if !helpers.DeleteFile(user.Image) {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 		}
 	}
 

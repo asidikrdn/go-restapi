@@ -1,7 +1,6 @@
 package seeders
 
 import (
-	"fmt"
 	"go-restapi/config/postgres"
 	"go-restapi/db/models"
 	"log"
@@ -25,11 +24,11 @@ func seedMstRole() {
 		for _, role := range newRole {
 			errAddRole := postgres.DB.Create(&role).Error
 			if errAddRole != nil {
-				fmt.Println(errAddRole.Error())
+				log.Println(errAddRole.Error())
 				log.Fatal("Seeding failed")
 			}
 		}
 
-		fmt.Println("Success seeding master role...")
+		log.Println("Success seeding master role...")
 	}
 }

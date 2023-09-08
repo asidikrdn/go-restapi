@@ -1,7 +1,6 @@
 package migrations
 
 import (
-	"fmt"
 	"go-restapi/config/postgres"
 	"go-restapi/db/models"
 	"log"
@@ -16,9 +15,9 @@ func DropMigration() {
 	)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		log.Fatal("Migration failed")
 	}
 
-	fmt.Println("Migration down completed successfully")
+	log.Println("Migration down completed successfully")
 }

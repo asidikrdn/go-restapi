@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 )
@@ -14,6 +15,6 @@ func DeleteFile(imgUrl string) bool {
 		return false
 	}
 
-	fmt.Println("File deleted")
+	log.Println("File " + fileName + " deleted")
 	return true
 }

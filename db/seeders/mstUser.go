@@ -2,7 +2,6 @@ package seeders
 
 import (
 	"errors"
-	"fmt"
 	"go-restapi/config/postgres"
 	"go-restapi/db/models"
 	"go-restapi/pkg/bcrypt"
@@ -37,10 +36,10 @@ func seedMstUser() {
 			// insert user to database
 			errAddUser := postgres.DB.Create(&newUser).Error
 			if errAddUser != nil {
-				fmt.Println(errAddUser.Error())
+				log.Println(errAddUser.Error())
 				log.Fatal("Seeding failed")
 			}
 		}
-		fmt.Println("Success seeding super admin...")
+		log.Println("Success seeding super admin...")
 	}
 }

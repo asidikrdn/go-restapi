@@ -1,8 +1,6 @@
 package seeders
 
-import (
-	"fmt"
-)
+import "log"
 
 func RunSeeder() {
 	// Role
@@ -11,5 +9,5 @@ func RunSeeder() {
 	// User
 	seedMstUser()
 
-	fmt.Println("Seeding completed successfully")
+	log.Println("Seeding completed successfully")
 }

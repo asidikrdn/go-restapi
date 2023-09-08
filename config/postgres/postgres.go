@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -31,5 +32,5 @@ func DatabaseInit() {
 	db, _ := DB.DB()
 	db.SetMaxOpenConns(5)
 
-	fmt.Println("Connected to Postgres Database")
+	log.Println("Connected to Postgres Database")
 }
