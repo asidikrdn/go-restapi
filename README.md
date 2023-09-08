@@ -66,13 +66,13 @@ And this is step-by-step to run this application :
 1. Clone the repository by running the following command in your terminal:
 
    ```sh
-   git clone https://github.com/asidikrdn/go-restapi-boilerplate.git
+   git clone https://github.com/asidikrdn/go-restapi.git
    ```
 
 2. Navigate to the project directory:
 
    ```sh
-   cd go-restapi-boilerplate
+   cd go-restapi
    ```
 
 3. Install dependencies using Go Modules:

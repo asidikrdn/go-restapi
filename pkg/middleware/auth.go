@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"go-restapi-boilerplate/dto"
-	jwtToken "go-restapi-boilerplate/pkg/jwt"
+	"go-restapi/dto"
+	jwtToken "go-restapi/pkg/jwt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

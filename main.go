@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"go-restapi-boilerplate/config/postgres"
-	"go-restapi-boilerplate/db/migrations"
-	"go-restapi-boilerplate/db/seeders"
-	"go-restapi-boilerplate/pkg/middleware"
-	"go-restapi-boilerplate/routes"
+	"go-restapi/config/postgres"
+	"go-restapi/db/migrations"
+	"go-restapi/db/seeders"
+	"go-restapi/pkg/middleware"
+	"go-restapi/routes"
 	"os"
 	"strconv"
 

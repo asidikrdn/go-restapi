@@ -1,7 +1,7 @@
 package handlerAuth
 
 import (
-	"go-restapi-boilerplate/dto"
+	"go-restapi/dto"
 	"net/http"
 	"strings"
 

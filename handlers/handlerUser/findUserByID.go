@@ -1,7 +1,7 @@
 package handlerUser
 
 import (
-	"go-restapi-boilerplate/dto"
+	"go-restapi/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

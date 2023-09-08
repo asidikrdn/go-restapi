@@ -3,9 +3,9 @@ package seeders
 import (
 	"errors"
 	"fmt"
-	"go-restapi-boilerplate/config/postgres"
-	"go-restapi-boilerplate/db/models"
-	"go-restapi-boilerplate/pkg/bcrypt"
+	"go-restapi/config/postgres"
+	"go-restapi/db/models"
+	"go-restapi/pkg/bcrypt"
 	"log"
 	"os"
 

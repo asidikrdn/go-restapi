@@ -1,8 +1,9 @@
 package handlerRole
 
 import (
-	"go-restapi-boilerplate/db/models"
-	"go-restapi-boilerplate/dto"
+	"go-restapi/db/models"
+	"go-restapi/dto"
+	"go-restapi/pkg/helpers"
 	"math"
 	"net/http"
 	"strconv"
@@ -22,10 +23,6 @@ func (h *handlerRole) FindAllRole(c *gin.Context) {
 
 	// with pagination
 	if c.Query("page") != "" {
-		var (
-			limit  int
-			offset int
-		)
 
 		// get page position
 		page, err := strconv.Atoi(c.Query("page"))
@@ -39,27 +36,18 @@ func (h *handlerRole) FindAllRole(c *gin.Context) {
 		}
 
 		// set limit (if not exist, use default limit -> 5)
-		if c.Query("limit") != "" {
-			limit, err = strconv.Atoi(c.Query("limit"))
-			if err != nil {
-				response := dto.Result{
-					Status:  http.StatusBadRequest,
-					Message: err.Error(),
-				}
-				c.JSON(http.StatusBadRequest, response)
-				return
+		limit, err := helpers.GetLimitParam(c)
+		if err != nil {
+			response := dto.Result{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
 			}
-		} else {
-			limit = 5
-
+			c.JSON(http.StatusBadRequest, response)
+			return
 		}
 
 		// set offset
-		if page == 1 {
-			offset = -1
-		} else {
-			offset = (page * limit) - limit
-		}
+		offset := helpers.GetOffset(page, limit)
 
 		// get role data from database
 		roles, totalRole, err = h.RoleRepository.FindAllRole(limit, offset, searchQuery)

@@ -2,13 +2,11 @@ package middleware
 
 import (
 	"fmt"
-	"go-restapi-boilerplate/dto"
+	"go-restapi/dto"
+	"go-restapi/pkg/helpers"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
-	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,20 +47,7 @@ func UploadSingleFile() gin.HandlerFunc {
 			return
 		}
 
-		// generate randomized filename using timestamps that convert to miliseconds
-		newFileName := fmt.Sprintf("%d%s", time.Now().UnixNano(), filepath.Ext(file.Filename))
-
-		// get active directory
-		dir, err := os.Getwd()
-		if err != nil {
-			panic(err.Error())
-		}
-
-		// set file location
-		fileLocation := filepath.Join(dir, "uploads/img", newFileName)
-
-		// Upload the file to specific dst.
-		err = c.SaveUploadedFile(file, fileLocation)
+		imgUrl, err := helpers.SaveFile(c, file)
 		if err != nil {
 			response := dto.Result{
 				Status:  http.StatusBadRequest,
@@ -71,13 +56,6 @@ func UploadSingleFile() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, response)
 			c.Abort()
 			return
-		}
-
-		var imgUrl string
-		if strings.Contains(c.Request.Host, "localhost") || strings.Contains(c.Request.Host, "127.0.0.1") {
-			imgUrl = fmt.Sprintf("http://%s/static/img/%s", c.Request.Host, newFileName)
-		} else {
-			imgUrl = fmt.Sprintf("https://%s/static/img/%s", c.Request.Host, newFileName)
 		}
 
 		// set up context value and send it to next handler
@@ -126,20 +104,7 @@ func UploadMultipleFiles() gin.HandlerFunc {
 				return
 			}
 
-			// generate randomized filename using timestamps that convert to miliseconds
-			newFileName := fmt.Sprintf("%d%s", time.Now().UnixNano(), filepath.Ext(file.Filename))
-
-			// get active directory
-			dir, err := os.Getwd()
-			if err != nil {
-				panic(err.Error())
-			}
-
-			// set file location
-			fileLocation := filepath.Join(dir, "uploads/img", newFileName)
-
-			// Upload the file to specific dst.
-			err = c.SaveUploadedFile(file, fileLocation)
+			imgUrl, err := helpers.SaveFile(c, file)
 			if err != nil {
 				response := dto.Result{
 					Status:  http.StatusBadRequest,
@@ -148,13 +113,6 @@ func UploadMultipleFiles() gin.HandlerFunc {
 				c.JSON(http.StatusBadRequest, response)
 				c.Abort()
 				return
-			}
-
-			var imgUrl string
-			if strings.Contains(c.Request.Host, "localhost") || strings.Contains(c.Request.Host, "127.0.0.1") {
-				imgUrl = fmt.Sprintf("http://%s/static/img/%s", c.Request.Host, newFileName)
-			} else {
-				imgUrl = fmt.Sprintf("https://%s/static/img/%s", c.Request.Host, newFileName)
 			}
 
 			arrImages = append(arrImages, imgUrl)

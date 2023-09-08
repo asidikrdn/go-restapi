@@ -2,9 +2,9 @@ package handlerUser
 
 import (
 	"fmt"
-	"go-restapi-boilerplate/db/models"
-	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/pkg/helpers"
+	"go-restapi/db/models"
+	"go-restapi/dto"
+	"go-restapi/pkg/helpers"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

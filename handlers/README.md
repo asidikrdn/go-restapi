@@ -9,9 +9,9 @@ example :
 package handlers
 
 import (
- "go-restapi-boilerplate/dto"
- "go-restapi-boilerplate/db/models"
- "go-restapi-boilerplate/repositories"
+ "go-restapi/dto"
+ "go-restapi/db/models"
+ "go-restapi/repositories"
 )
 
 type handlerUser struct {

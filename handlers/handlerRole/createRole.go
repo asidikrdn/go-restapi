@@ -1,8 +1,8 @@
 package handlerRole
 
 import (
-	"go-restapi-boilerplate/db/models"
-	"go-restapi-boilerplate/dto"
+	"go-restapi/db/models"
+	"go-restapi/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

@@ -1,7 +1,7 @@
 package handlerRole
 
 import (
-	"go-restapi-boilerplate/dto"
+	"go-restapi/dto"
 	"net/http"
 	"strconv"
 

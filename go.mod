@@ -1,4 +1,4 @@
-module go-restapi-boilerplate
+module go-restapi
 
 go 1.20
 

@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"fmt"
-	"go-restapi-boilerplate/db/models"
+	"go-restapi/db/models"
 
 	"gorm.io/gorm"
 )

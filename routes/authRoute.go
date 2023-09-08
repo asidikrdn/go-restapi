@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"go-restapi-boilerplate/config/postgres"
-	handlerAuth "go-restapi-boilerplate/handlers/handleAuth"
-	"go-restapi-boilerplate/pkg/middleware"
-	"go-restapi-boilerplate/repositories"
+	"go-restapi/config/postgres"
+	handlerAuth "go-restapi/handlers/handleAuth"
+	"go-restapi/pkg/middleware"
+	"go-restapi/repositories"
 
 	"github.com/gin-gonic/gin"
 )

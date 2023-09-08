@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"bytes"
-	"go-restapi-boilerplate/config/postgres"
-	"go-restapi-boilerplate/db/models"
+	"go-restapi/config/postgres"
+	"go-restapi/db/models"
 	"io"
 	"strings"
 	"time"

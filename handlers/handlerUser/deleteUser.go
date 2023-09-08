@@ -2,8 +2,8 @@ package handlerUser
 
 import (
 	"fmt"
-	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/pkg/helpers"
+	"go-restapi/dto"
+	"go-restapi/pkg/helpers"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

@@ -1,8 +1,9 @@
 package handlerUser
 
 import (
-	"go-restapi-boilerplate/db/models"
-	"go-restapi-boilerplate/dto"
+	"go-restapi/db/models"
+	"go-restapi/dto"
+	"go-restapi/pkg/helpers"
 	"math"
 	"net/http"
 	"strconv"
@@ -38,7 +39,7 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
 		}
 
 		// set limit (if not exist, use default limit -> 5)
-		limit, err := getLimitParam(c)
+		limit, err := helpers.GetLimitParam(c)
 		if err != nil {
 			response := dto.Result{
 				Status:  http.StatusBadRequest,
@@ -49,7 +50,7 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
 		}
 
 		// set offset
-		offset := getOffset(page, limit)
+		offset := helpers.GetOffset(page, limit)
 
 		// get all users
 		users, totalUser, err = h.UserRepository.FindAllUsers(limit, offset, filterQuery, searchQuery)
@@ -96,18 +97,4 @@ func (h *handlerUser) FindAllUsers(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, response)
 	}
-}
-
-func getLimitParam(c *gin.Context) (int, error) {
-	if c.Query("limit") != "" {
-		return strconv.Atoi(c.Query("limit"))
-	}
-	return 5, nil
-}
-
-func getOffset(page, limit int) int {
-	if page == 1 {
-		return -1
-	}
-	return (page * limit) - limit
 }

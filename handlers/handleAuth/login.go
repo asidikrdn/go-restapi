@@ -1,9 +1,9 @@
 package handlerAuth
 
 import (
-	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/pkg/bcrypt"
-	jwtToken "go-restapi-boilerplate/pkg/jwt"
+	"go-restapi/dto"
+	"go-restapi/pkg/bcrypt"
+	jwtToken "go-restapi/pkg/jwt"
 	"net/http"
 	"time"
 

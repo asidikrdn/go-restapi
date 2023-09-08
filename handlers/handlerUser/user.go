@@ -1,9 +1,9 @@
 package handlerUser
 
 import (
-	"go-restapi-boilerplate/db/models"
-	"go-restapi-boilerplate/dto"
-	"go-restapi-boilerplate/repositories"
+	"go-restapi/db/models"
+	"go-restapi/dto"
+	"go-restapi/repositories"
 )
 
 type handlerUser struct {
