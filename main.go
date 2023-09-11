@@ -23,9 +23,8 @@ import (
 )
 
 func main() {
-
 	// load environment variables
-	err := godotenv.Load("config.env")
+	err := godotenv.Load("config.env", ".env")
 	if err != nil {
 		log.Println("Error loading environment variables file, the apps will read global environtment variabels on this system")
 	}
